@@ -7,68 +7,137 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      margin: 0;
       background: #f2f2f2;
     }
+
     h1 {
       text-align: center;
       color: #2c3e50;
+      padding: 15px;
     }
+
     .container {
-      max-width: 850px;
+      max-width: 900px;
       margin: auto;
       background: #fff;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
+
     .form-group {
       margin-bottom: 15px;
     }
+
     input, select, button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
     }
+
+    button {
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #1a242f;
+    }
+
     table {
       width: 100%;
       margin-top: 20px;
       border-collapse: collapse;
     }
+
     th, td {
       padding: 10px;
       border: 1px solid #ddd;
       text-align: center;
     }
+
     th {
       background-color: #2c3e50;
       color: white;
     }
-    .actions button {
-      background: red;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
+
     #total {
       font-weight: bold;
       text-align: right;
       margin-top: 10px;
       font-size: 18px;
     }
-    @media (max-width: 600px) {
+
+    .actions button {
+      background: red;
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 5px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
       input, select, button {
         font-size: 16px;
       }
+
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #f9f9f9;
+      }
+
+      td {
+        text-align: left;
+        padding: 8px;
+        position: relative;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      #total {
+        text-align: center;
+        margin-top: 20px;
+      }
     }
+
     @media print {
       body * {
         visibility: hidden;
       }
+
       #invoiceArea, #invoiceArea * {
         visibility: visible;
       }
+
       #invoiceArea {
         position: absolute;
         left: 0;
@@ -202,14 +271,12 @@
         if (filter === "All" || exp.category === filter) {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${exp.date}</td>
-            <td>${exp.category}</td>
-            <td>${exp.description}</td>
-            <td>₹${exp.amount.toFixed(2)}</td>
-            <td>
-              ${exp.bill ? `<a href="${exp.bill}" target="_blank">📎 View Bill</a>` : '—'}
-            </td>
-            <td class="actions"><button onclick="deleteExpense(${index})">Delete</button></td>
+            <td data-label="Date">${exp.date}</td>
+            <td data-label="Category">${exp.category}</td>
+            <td data-label="Description">${exp.description}</td>
+            <td data-label="Amount">₹${exp.amount.toFixed(2)}</td>
+            <td data-label="Bill">${exp.bill ? `<a href="${exp.bill}" target="_blank">📎 View Bill</a>` : '—'}</td>
+            <td data-label="Action"><button onclick="deleteExpense(${index})">Delete</button></td>
           `;
           tableBody.appendChild(row);
           total += exp.amount;
